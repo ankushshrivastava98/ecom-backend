@@ -5,20 +5,23 @@ const router = express.Router();
 
 // [POST] add new Product
 router.post('/product', async (req, res) => {
-    const data = new product(req.body);
-    const result = await data.save();
-    if (result) {
-        res.json({
-            status: 'SUCCESS',
-            message: 'Product added successfully.',
-            data: result,
-        })
-
-    } else {
-        res.json({
-            status: 'FAILED',
-            message: 'Unable to add product, please try again.'
-        })
+    try {
+        const data = new product(req.body);
+        const result = await data.save();
+        if (result) {
+            res.json({
+                status: 'SUCCESS',
+                message: 'Product added successfully.',
+                data: result,
+            })
+        } else {
+            res.json({
+                status: 'FAILED',
+                message: 'Unable to add product, please try again.'
+            })
+        }
+    } catch (e) {
+        console.log(e)
     }
 })
 
