@@ -28,7 +28,20 @@ const productSchema = new mongose.Schema({
         type: String,
         required: true
     },
+    images: {
+        type: Array,
+        required: true
+    },
+    sizes: {
+        type: Array,
+        required: true
+    },
+    description: {
+        type: String,
+        required: true
+    },
 })
+// description, sizes, images not required for all products list
 
 productSchema.set('toJSON', {
     virtuals: true,
@@ -55,3 +68,16 @@ module.exports = product;
 
 // [-Reference-]
 // https://www.youtube.com/watch?v=rdIbYY1U10o
+
+//  {
+//     id: '2',
+//     name: 'Product Name',
+//     description: 'description description description description description description description description description description description description',
+//     price: 15,
+//     -sizes: [36, 37, 38, 40, 50],
+//     category: 'men',
+//     color: 'black',
+//     slug: "Product-Name-slug",
+//     // productVariants: [] // TODO - Suggest Similar products like amazon
+//     -images: ['https://www.jqueryscript.net/images/Minimal-AJAX-Loading-Spinner-Plugin-with-jQuery-pleaseWait.jpg', 'https://www.jqueryscript.net/images/Skeleton-Loading-Screen-jQuery-avnSkeleton.jpg', 'https://www.jqueryscript.net/images/SVG-Progress-Bar-For-jQuery-JavaScript-Angular.jpg'],
+//   }

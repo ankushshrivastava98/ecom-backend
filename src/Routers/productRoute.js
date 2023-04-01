@@ -37,7 +37,8 @@ router.post('/product', async (req, res) => {
 // [GET] get All products
 router.get('/product', async (req, res) => {
     try {
-        const result = await product.find();
+        const requiredFields = "name price category slug promotionPrice color image"
+        const result = await product.find({}).select(requiredFields);
         if (result) {
             res.json({
                 status: 'SUCCESS',
