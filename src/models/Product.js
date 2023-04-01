@@ -1,6 +1,11 @@
 const mongose = require("mongoose");
 const productSchema = new mongose.Schema({
-
+    slug: {
+        type: String,
+        required: true,
+        unique: true,
+        index: true
+    },
     name: {
         type: String,
         required: true
@@ -10,10 +15,6 @@ const productSchema = new mongose.Schema({
         required: true
     },
     category: {
-        type: String,
-        required: true
-    },
-    slug: {
         type: String,
         required: true
     },
@@ -32,8 +33,8 @@ const productSchema = new mongose.Schema({
 productSchema.set('toJSON', {
     virtuals: true,
     versionKey: false,
-    transform: function (doc, ret) { 
-        delete ret._id 
+    transform: function (doc, ret) {
+        delete ret._id
         ret.timeStamp = new Date();
     }
 });

@@ -6,18 +6,27 @@ const router = express.Router();
 // [POST] add new Product
 router.post('/product', async (req, res) => {
     try {
-        const data = new product(req.body);
-        const result = await data.save();
-        if (result) {
-            res.json({
-                status: 'SUCCESS',
-                message: 'Product added successfully.',
-                data: result,
-            })
+        const slug = req.body.slug;
+        const alreadyExist = await product.findOne({ slug })
+        if (!alreadyExist) {
+            const data = new product(req.body);
+            const result = await data.save();
+            if (result) {
+                res.json({
+                    status: 'SUCCESS',
+                    message: 'Product added successfully.',
+                    data: result,
+                })
+            } else {
+                res.json({
+                    status: 'FAILED',
+                    message: 'Unable to add product, please try again.'
+                })
+            }
         } else {
             res.json({
                 status: 'FAILED',
-                message: 'Unable to add product, please try again.'
+                message: `Product already exists with the slug: ${slug}`
             })
         }
     } catch (e) {
@@ -33,6 +42,7 @@ router.get('/product', async (req, res) => {
             res.json({
                 status: 'SUCCESS',
                 message: 'All products list',
+                count: result.length,
                 data: result,
             })
         } else {
@@ -47,10 +57,10 @@ router.get('/product', async (req, res) => {
 })
 
 // [GET] get Single product
-router.get('/product/:id', async (req, res) => {
+router.get('/product/:slug', async (req, res) => {
     try {
-        const id = req.params.id
-        const result = await product.findById(id);
+        const slug = req.params.slug
+        const result = await product.findOne({ slug });
         if (result) {
             res.json({
                 status: 'SUCCESS',
@@ -60,7 +70,7 @@ router.get('/product/:id', async (req, res) => {
         } else {
             res.json({
                 status: 'FAILED',
-                message: `Product not found with id: ${id}`
+                message: `Product not found with slug: ${slug}`
             })
 
         }
@@ -72,18 +82,26 @@ router.get('/product/:id', async (req, res) => {
 // [PUT] update Product
 router.put('/product', async (req, res) => {
     try {
-        const id = req.body.id;
-        const result = await product.findByIdAndUpdate(id, req.body, { new: true });
-        if (result) {
-            res.json({
-                status: 'SUCCESS',
-                message: 'Product updated successfully',
-                data: result,
-            })
-        } else {
+        const slug = req.body.slug;
+        const alreadyExists = await product.findOne({ slug });
+        if (alreadyExists) {
+            const result = await product.findOneAndUpdate({slug}, req.body, { new: true });
+            if (result) {
+                res.json({
+                    status: 'SUCCESS',
+                    message: 'Product updated successfully',
+                    data: result,
+                })
+            } else {
+                res.json({
+                    status: 'FAILED',
+                    message: `Unable to update product with slug: ${slug}.`
+                })
+            }
+        }else{
             res.json({
                 status: 'FAILED',
-                message: `Unable to update product with id: ${id}.`
+                message: `Product not found with the slug: ${slug}`
             })
         }
     } catch (e) {
@@ -91,11 +109,11 @@ router.put('/product', async (req, res) => {
     }
 })
 
-// [Delete] delete Product
-router.delete('/product/:id', async (req, res) => {
+// [Delete] delete single Product
+router.delete('/product/:slug', async (req, res) => {
     try {
-        const id = req.params.id;
-        const result = await product.findByIdAndDelete(id);
+        const slug = req.params.slug;
+        const result = await product.findOneAndDelete({slug});
         if (result) {
             res.json({
                 status: 'SUCCESS',
@@ -105,7 +123,28 @@ router.delete('/product/:id', async (req, res) => {
         } else {
             res.json({
                 status: 'FAILED',
-                message: `Unable to delete product with id: ${id},`
+                message: `Product not found with slug: ${slug},`
+            })
+        }
+    } catch (e) {
+        console.log(e);
+    }
+})
+
+// [Delete] delete all Product NOTE: only for developers
+router.delete('/product', async (req, res) => {
+    try {
+        const result = await product.deleteMany({});
+        if (result) {
+            res.json({
+                status: 'SUCCESS',
+                message: 'All Products deleted successfully',
+                data: result,
+            })
+        } else {
+            res.json({
+                status: 'FAILED',
+                message: 'Unable to delete all products'
             })
         }
     } catch (e) {
