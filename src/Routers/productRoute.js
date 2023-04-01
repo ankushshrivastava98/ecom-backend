@@ -1,5 +1,5 @@
 const express = require('express');
-const product = require('./../models/Product');
+const productModel = require('./../models/Product');
 
 const router = express.Router();
 
@@ -7,9 +7,9 @@ const router = express.Router();
 router.post('/product', async (req, res) => {
     try {
         const slug = req.body.slug;
-        const alreadyExist = await product.findOne({ slug })
+        const alreadyExist = await productModel.findOne({ slug })
         if (!alreadyExist) {
-            const data = new product(req.body);
+            const data = new productModel(req.body);
             const result = await data.save();
             if (result) {
                 res.json({
@@ -38,7 +38,7 @@ router.post('/product', async (req, res) => {
 router.get('/product', async (req, res) => {
     try {
         const requiredFields = "name price category slug promotionPrice color image"
-        const result = await product.find({}).select(requiredFields);
+        const result = await productModel.find({}).select(requiredFields);
         if (result) {
             res.json({
                 status: 'SUCCESS',
@@ -61,7 +61,7 @@ router.get('/product', async (req, res) => {
 router.get('/product/:slug', async (req, res) => {
     try {
         const slug = req.params.slug
-        const result = await product.findOne({ slug });
+        const result = await productModel.findOne({ slug });
         if (result) {
             res.json({
                 status: 'SUCCESS',
@@ -84,9 +84,9 @@ router.get('/product/:slug', async (req, res) => {
 router.put('/product', async (req, res) => {
     try {
         const slug = req.body.slug;
-        const alreadyExists = await product.findOne({ slug });
+        const alreadyExists = await productModel.findOne({ slug });
         if (alreadyExists) {
-            const result = await product.findOneAndUpdate({slug}, req.body, { new: true });
+            const result = await productModel.findOneAndUpdate({slug}, req.body, { new: true });
             if (result) {
                 res.json({
                     status: 'SUCCESS',
@@ -114,7 +114,7 @@ router.put('/product', async (req, res) => {
 router.delete('/product/:slug', async (req, res) => {
     try {
         const slug = req.params.slug;
-        const result = await product.findOneAndDelete({slug});
+        const result = await productModel.findOneAndDelete({slug});
         if (result) {
             res.json({
                 status: 'SUCCESS',
@@ -135,7 +135,7 @@ router.delete('/product/:slug', async (req, res) => {
 // [Delete] delete all Product NOTE: only for developers
 router.delete('/product', async (req, res) => {
     try {
-        const result = await product.deleteMany({});
+        const result = await productModel.deleteMany({});
         if (result) {
             res.json({
                 status: 'SUCCESS',
