@@ -31,7 +31,7 @@ const OrderSchema = new mongose.Schema({
         required: true
     },
     productDetails:{
-        type: Object,
+        type: Array,
         required:true,
     }
 })
