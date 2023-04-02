@@ -72,24 +72,24 @@ router.delete('/order/:id', async (req, res) => {
 })
 
 // [Delete] delete all Product NOTE: only for developers
-// router.delete('/product', async (req, res) => {
-//     try {
-//         const result = await orderModel.deleteMany({});
-//         if (result) {
-//             res.json({
-//                 status: 'SUCCESS',
-//                 message: 'All Products deleted successfully',
-//                 data: result,
-//             })
-//         } else {
-//             res.json({
-//                 status: 'FAILED',
-//                 message: 'Unable to delete all products'
-//             })
-//         }
-//     } catch (e) {
-//         console.log(e);
-//     }
-// })
+router.delete('/order', async (req, res) => {
+    try {
+        const result = await orderModel.deleteMany({});
+        if (result) {
+            res.json({
+                status: 'SUCCESS',
+                message: 'All Order deleted successfully',
+                data: result,
+            })
+        } else {
+            res.json({
+                status: 'FAILED',
+                message: 'Unable to delete all orders'
+            })
+        }
+    } catch (e) {
+        console.log(e);
+    }
+})
 
 module.exports = router;
