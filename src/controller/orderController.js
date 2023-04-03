@@ -24,7 +24,7 @@ const addNewOrder = async (req, res) => {
 
 const getAllOrders = async (req, res) => {
     try {
-        const result = await orderModel.find()
+        const result = await orderModel.find({}).select({userId: req.userId})
         if (result) {
             res.json({
                 status: 'SUCCESS',

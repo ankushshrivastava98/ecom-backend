@@ -5,10 +5,19 @@ const port = process.env.PORT || 8080;
 const productRoute = require('./Routers/productRoute');
 const orderRoute = require('./Routers/orderRoute');
 const userRoute = require('./Routers/userRoute');
+
 app.use(express.json());
+
+app.use((req, res, next) => {
+    console.log(req.method, req.url);
+    next();
+})
+
 app.use(productRoute);
 app.use(orderRoute);
 app.use(userRoute);
-app.listen(port,()=>{
+
+
+app.listen(port, () => {
     console.log(`Connection is setup at Port ${port}`);
 })
