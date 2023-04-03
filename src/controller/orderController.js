@@ -2,7 +2,9 @@ const orderModel = require('./../models/Order');
 
 const addNewOrder = async (req, res) => {
     try {
-        const data = new orderModel(req.body);
+        const { slug, size, color, quantity } = req.body;
+        const userId = req.userId;
+        const data = new orderModel({ slug, size, color, quantity, userId });
         const result = data && await data.save();
         if (result) {
             res.json({
@@ -24,7 +26,8 @@ const addNewOrder = async (req, res) => {
 
 const getAllOrders = async (req, res) => {
     try {
-        const result = await orderModel.find({}).select({userId: req.userId})
+        console.log(req.userId)
+        const result = await orderModel.find({ userId: req.userId })
         if (result) {
             res.json({
                 status: 'SUCCESS',
@@ -84,4 +87,4 @@ const deleteAllOrders = async (req, res) => {
     }
 }
 
-module.exports = {addNewOrder, getAllOrders, deleteOrderById, deleteAllOrders}
+module.exports = { addNewOrder, getAllOrders, deleteOrderById, deleteAllOrders }
