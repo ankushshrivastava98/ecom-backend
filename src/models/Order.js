@@ -1,37 +1,23 @@
 const mongose = require("mongoose");
 const OrderSchema = new mongose.Schema({
-    email: {
+    userId:{
         type: String,
-        required: true
+        required:true,
     },
-    name: {
+    slug:{
         type: String,
-        required: true
+        required:true,
     },
-    phone: {
+    size:{
         type: String,
-        required: true
+        required:true,
     },
-    address: {
-        type: String
-    },
-    city: {
+    color:{
         type: String,
+        required:true,
     },
-    postCode: {
+    quantity:{
         type: String,
-        required: true
-    },
-    country: {
-        type: String,
-        required: true
-    },
-    altPhone: {
-        type: String,
-        required: true
-    },
-    productDetails:{
-        type: Array,
         required:true,
     }
 })
@@ -47,13 +33,3 @@ OrderSchema.set('toJSON', {
 
 const order = new mongose.model('order', OrderSchema);
 module.exports = order;
-// {
-//   "email": "afasdd@aa.com",
-//   "name": "dasfsdadf",
-//   "phone": "12w324",
-//   "address": "aszdfasd",
-//   "city": "asdfasdf",
-//   "postCode": "asdffas",
-//   "country": "asdfasf",
-//   "altPhone": "234235AAS"
-// }

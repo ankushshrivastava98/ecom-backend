@@ -16,9 +16,49 @@ const UserSchema = new mongose.Schema({
         type: String,
         required: true
     },
-    userDetails: {
+    information:{
         type: Array,
-    }   
+        contact:{
+            type: Object,
+            required: true,
+            email: {
+                type: String,
+                required: true
+            },
+            name: {
+                type: String,
+                required: true
+            },
+            phone: {
+                type: String,
+                required: true
+            },
+            altPhone: {
+                type: String,
+                required: true
+            },
+        },
+        location: {
+            type: Object,
+            required: true,
+            address: {
+                type: String,
+                required: true
+            },
+            city: {
+                type: String,
+                required: true
+            },
+            postcode: {
+                type: String,
+                required: true
+            },
+            country: {
+                type: String,
+                required: true
+            },
+        }  
+    } 
 })
 
 UserSchema.set('toJSON', {
