@@ -22,7 +22,9 @@ const signup = async (req, res) => {
       });
       const result = await newUser.save();
       if (result) {
-        const token = jwt.sign({ email: newUser.email, id: newUser.id }, SECRET_KEY);
+        const token = jwt.sign({ email: newUser.email, id: newUser.id }, SECRET_KEY, {
+          expiresIn:"300s"
+        });
         res.status(201).json({ token })
       }
       else throw ("ERROR")

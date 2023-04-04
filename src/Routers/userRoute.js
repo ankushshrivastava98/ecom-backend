@@ -2,8 +2,10 @@ const express = require('express');
 const router = express.Router();
 const { signin, signup } = require('../controller/userController')
 
-// Email Password login
+// USER
 router.post("/signin", signin)
+
+// USER
 router.post("/signup", signup)
 
 // // Mobile number login

@@ -10,6 +10,6 @@ router.get('/order', auth, getAllOrders)
 
 router.delete('/order/:id', auth, deleteOrderById)
 
-// router.delete('/order', deleteAllOrders)
+// router.delete('/order', auth, deleteAllOrders)
 
 module.exports = router;
