@@ -5,6 +5,7 @@ const { badRequest400, serverError500, created201, success200 } = require("../he
 
 const SECRET_KEY = 'ha34523jiosf123dhfj';
 const TOKEN_EXPIRE_TIME = "300s";
+const HASH_SALT = 7;
 
 const signup = async (req, res) => {
   const { username, email, password } = req.body;
@@ -13,7 +14,7 @@ const signup = async (req, res) => {
     if (existingUser) {
       badRequest400(res, `User already exists with email: ${email}`)
     } else {
-      const hashedPassword = await bcrypt.hash(password, 7);
+      const hashedPassword = await bcrypt.hash(password, HASH_SALT);
       const newUser = new userModel({
         username: username || 'User',
         email: email,
@@ -26,7 +27,9 @@ const signup = async (req, res) => {
         });
         created201(res, "SIGNNED UP SUCCESSFULLY", { token })
       }
-      else throw ("ERROR")
+      else {
+        badRequest400(res, 'Something went wrong');
+      }
 
     }
   } catch (error) {
