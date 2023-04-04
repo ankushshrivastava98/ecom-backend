@@ -1,3 +1,4 @@
+const { badRequest400, serverError500, success200 } = require('../helpers/requestBuilder');
 const productModel = require('./../models/Product');
 
 const addNewProduct = async (req, res) => {
@@ -8,25 +9,16 @@ const addNewProduct = async (req, res) => {
             const data = new productModel(req.body);
             const result = await data.save();
             if (result) {
-                res.json({
-                    status: 'SUCCESS',
-                    message: 'Product added successfully.',
-                    data: result,
-                })
+                success200(res, 'Product added successfully.', { data: result })
             } else {
-                res.json({
-                    status: 'FAILED',
-                    message: 'Unable to add product, please try again.'
-                })
+                badRequest400(res, 'Unable to add product, please try again.')
             }
         } else {
-            res.json({
-                status: 'FAILED',
-                message: `Product already exists with the slug: ${slug}`
-            })
+            badRequest400(res, `Product already exists with the slug: ${slug}`)
         }
     } catch (e) {
         console.log(e)
+        serverError500(res);
     }
 }
 
@@ -35,20 +27,13 @@ const getAllProducts = async (req, res) => {
         const requiredFields = "name price category slug promotionPrice color image"
         const result = await productModel.find({}).select(requiredFields);
         if (result) {
-            res.json({
-                status: 'SUCCESS',
-                message: 'All products list',
-                count: result.length,
-                data: result,
-            })
+            success200(res, 'All products list', { data: result, count: result.length })
         } else {
-            res.json({
-                status: 'FAILED',
-                message: 'Products not found, please try again.'
-            })
+            badRequest400(res, 'Products not found, please try again.')
         }
     } catch (e) {
         console.log(e);
+        serverError500(res);
     }
 }
 
@@ -57,20 +42,13 @@ const getProuctBySlug = async (req, res) => {
         const slug = req.params.slug
         const result = await productModel.findOne({ slug });
         if (result) {
-            res.json({
-                status: 'SUCCESS',
-                message: 'Product',
-                data: result,
-            })
+            success200(res, 'Product', { data: result })
         } else {
-            res.json({
-                status: 'FAILED',
-                message: `Product not found with slug: ${slug}`
-            })
-
+            badRequest400(res, `Product not found with slug: ${slug}`)
         }
     } catch (e) {
         console.log(e);
+        serverError500(res);
     }
 }
 
@@ -79,48 +57,33 @@ const updateProductBySlug = async (req, res) => {
         const slug = req.body.slug;
         const alreadyExists = await productModel.findOne({ slug });
         if (alreadyExists) {
-            const result = await productModel.findOneAndUpdate({slug}, req.body, { new: true });
+            const result = await productModel.findOneAndUpdate({ slug }, req.body, { new: true });
             if (result) {
-                res.json({
-                    status: 'SUCCESS',
-                    message: 'Product updated successfully',
-                    data: result,
-                })
+                success200(res, 'Product updated successfully.', { data: result })
             } else {
-                res.json({
-                    status: 'FAILED',
-                    message: `Unable to update product with slug: ${slug}.`
-                })
+                badRequest400(res, `Unable to update product with slug: ${slug}.`)
             }
-        }else{
-            res.json({
-                status: 'FAILED',
-                message: `Product not found with the slug: ${slug}`
-            })
+        } else {
+            badRequest400(res, `Product not found with the slug: ${slug}`)
         }
     } catch (e) {
         console.log(e);
+        serverError500(res);
     }
 }
 
 const deleteProductBySlug = async (req, res) => {
     try {
         const slug = req.params.slug;
-        const result = await productModel.findOneAndDelete({slug});
+        const result = await productModel.findOneAndDelete({ slug });
         if (result) {
-            res.json({
-                status: 'SUCCESS',
-                message: 'Product deleted successfully',
-                data: result,
-            })
+            success200(res, 'Product deleted successfully', { data: result })
         } else {
-            res.json({
-                status: 'FAILED',
-                message: `Product not found with slug: ${slug},`
-            })
+            badRequest400(res, `Product not found with slug: ${slug},`)
         }
     } catch (e) {
         console.log(e);
+        serverError500(res);
     }
 }
 
@@ -128,20 +91,14 @@ const deleteAllProducts = async (req, res) => {
     try {
         const result = await productModel.deleteMany({});
         if (result) {
-            res.json({
-                status: 'SUCCESS',
-                message: 'All Products deleted successfully',
-                data: result,
-            })
+            success200(res, 'All Products deleted successfully', { data: result })
         } else {
-            res.json({
-                status: 'FAILED',
-                message: 'Unable to delete all products'
-            })
+            badRequest400(res, 'Unable to delete all products')
         }
     } catch (e) {
         console.log(e);
+        serverError500(res);
     }
 }
 
-module.exports = {addNewProduct, getAllProducts, getProuctBySlug, updateProductBySlug, deleteProductBySlug, deleteAllProducts }
+module.exports = { addNewProduct, getAllProducts, getProuctBySlug, updateProductBySlug, deleteProductBySlug, deleteAllProducts }

@@ -1,3 +1,4 @@
+const { success200, badRequest400 } = require('../helpers/requestBuilder');
 const orderModel = require('./../models/Order');
 
 const addNewOrder = async (req, res) => {
@@ -7,18 +8,10 @@ const addNewOrder = async (req, res) => {
         const data = new orderModel({ slug, size, color, quantity, userId });
         const result = data && await data.save();
         if (result) {
-            res.json({
-                status: 'SUCCESS',
-                message: 'Order placed successfully.',
-                data: result,
-            })
+            success200(res, "Order placed successfully", { data: result });
         } else {
-            res.json({
-                status: 'FAILED',
-                message: 'Unable to place order, please try again.'
-            })
+            badRequest400(res, 'Unable to place order, please try again.');
         }
-
     } catch (e) {
         console.log(e)
     }
@@ -26,20 +19,11 @@ const addNewOrder = async (req, res) => {
 
 const getAllOrders = async (req, res) => {
     try {
-        console.log(req.userId)
         const result = await orderModel.find({ userId: req.userId })
         if (result) {
-            res.json({
-                status: 'SUCCESS',
-                message: 'All Orders',
-                count: result.length,
-                data: result,
-            })
+            success200(res, "All Orders", { data: result });
         } else {
-            res.json({
-                status: 'FAILED',
-                message: 'Orders not found.'
-            })
+            badRequest400(res, 'Orders not found.');
         }
     } catch (e) {
         console.log(e);
@@ -51,16 +35,9 @@ const deleteOrderById = async (req, res) => {
         const id = req.params.id;
         const result = await orderModel.findByIdAndDelete(id);
         if (result) {
-            res.json({
-                status: 'SUCCESS',
-                message: 'Order cancelled successfully',
-                data: result,
-            })
+            success200(res, "Order cancelled successfully", { data: result });
         } else {
-            res.json({
-                status: 'FAILED',
-                message: `Order not found with id: ${id},`
-            })
+            badRequest400(res, `Order not found with id: ${id},`);
         }
     } catch (e) {
         console.log(e);
@@ -71,16 +48,9 @@ const deleteAllOrders = async (req, res) => {
     try {
         const result = await orderModel.deleteMany({});
         if (result) {
-            res.json({
-                status: 'SUCCESS',
-                message: 'All Order deleted successfully',
-                data: result,
-            })
+            success200(res, "All Order deleted successfully", { data: result });
         } else {
-            res.json({
-                status: 'FAILED',
-                message: 'Unable to delete all orders'
-            })
+            badRequest400(res, 'Unable to delete all orders');
         }
     } catch (e) {
         console.log(e);
