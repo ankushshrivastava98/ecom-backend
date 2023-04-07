@@ -1,19 +1,31 @@
-const { success200, badRequest400 } = require('../helpers/requestBuilder');
+const { getUpdatedProductDataIfInStock } = require('../helpers/Utils');
+const { success200, badRequest400, serverError500 } = require('../helpers/requestBuilder');
+const productModel = require('../models/Product');
 const orderModel = require('./../models/Order');
 
 const addNewOrder = async (req, res) => {
     try {
         const { slug, size, color, quantity } = req.body;
         const userId = req.userId;
-        const data = new orderModel({ slug, size, color, quantity, userId });
-        const result = data && await data.save();
-        if (result) {
-            success200(res, "Order placed successfully", { data: result });
+        const orderedProduct = await productModel.findOne({ slug })
+        let updatedProductData = getUpdatedProductDataIfInStock(orderedProduct, { size, color, quantity })
+        
+        if (updatedProductData) {
+            const data = new orderModel({ slug, size, color, quantity, userId });
+            const result = data && await data.save();
+            if (result) {
+                await productModel.findOneAndUpdate({ slug }, updatedProductData, { new: true });
+                success200(res, "Order placed successfully", { data: result });
+            } else {
+                badRequest400(res, 'Unable to place order, please try again.');
+            }
         } else {
-            badRequest400(res, 'Unable to place order, please try again.');
+            badRequest400(res, 'Product not available or Out of Stock');
         }
+
     } catch (e) {
         console.log(e)
+        serverError500(res);
     }
 }
 
@@ -27,6 +39,7 @@ const getAllOrders = async (req, res) => {
         }
     } catch (e) {
         console.log(e);
+        serverError500(res);
     }
 }
 
@@ -41,6 +54,7 @@ const deleteOrderById = async (req, res) => {
         }
     } catch (e) {
         console.log(e);
+        serverError500(res);
     }
 }
 
@@ -54,6 +68,7 @@ const deleteAllOrders = async (req, res) => {
         }
     } catch (e) {
         console.log(e);
+        serverError500(res);
     }
 }
 

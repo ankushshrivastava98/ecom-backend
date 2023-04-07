@@ -40,6 +40,22 @@ const productSchema = new mongose.Schema({
         type: String,
         required: true
     },
+    stock: [
+        {
+            size: {
+                type: String,
+                required: true
+            },
+            color: {
+                type: String,
+                required: true
+            },
+            quantity: {
+                type: Number,
+                required: true
+            }
+        }
+    ]
 })
 // description, sizes, images not required for all products list
 
@@ -54,30 +70,3 @@ productSchema.set('toJSON', {
 
 const product = new mongose.model('product', productSchema);
 module.exports = product;
-
-// {
-//    "id": "2",
-//    "name": "Nike LeBron 19 Low",
-//    "price": 140,
-//    "category": "unisex",
-//    "slug": "Nike-LeBron-19-Low",
-//    "promotionPrice": null,
-//    "color": "white",
-//    "image": "https://www.jqueryscript.net/images/Skeleton-Loading-Screen-jQuery-avnSkeleton.jpg"
-// },
-
-// [-Reference-]
-// https://www.youtube.com/watch?v=rdIbYY1U10o
-
-//  {
-//     id: '2',
-//     name: 'Product Name',
-//     description: 'description description description description description description description description description description description description',
-//     price: 15,
-//     -sizes: [36, 37, 38, 40, 50],
-//     category: 'men',
-//     color: 'black',
-//     slug: "Product-Name-slug",
-//     // productVariants: [] // TODO - Suggest Similar products like amazon
-//     -images: ['https://www.jqueryscript.net/images/Minimal-AJAX-Loading-Spinner-Plugin-with-jQuery-pleaseWait.jpg', 'https://www.jqueryscript.net/images/Skeleton-Loading-Screen-jQuery-avnSkeleton.jpg', 'https://www.jqueryscript.net/images/SVG-Progress-Bar-For-jQuery-JavaScript-Angular.jpg'],
-//   }
