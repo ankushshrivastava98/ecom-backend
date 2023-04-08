@@ -1,9 +1,9 @@
 function success200(res, message, data) {
-    res.status(200).json({ message, ...data });
+    res.status(200).json({ message, data });
 }
 
 function created201(res, message, data) {
-    res.status(201).json({ message, ...data });
+    res.status(201).json({ message, data });
 }
 
 function badRequest400(res, message) {
