@@ -13,7 +13,11 @@ function badRequest400(res, message) {
         message,
     })
 }
-
+function unauthorized401(res, message) {
+    res.status(401).json({
+        message,
+    })
+}
 function serverError500(res) {
     res.status(500).json({
         message: SERVER_ERROR
@@ -22,4 +26,4 @@ function serverError500(res) {
 
 
 
-module.exports = { success200, created201, badRequest400, serverError500 }
+module.exports = { success200, created201, badRequest400, unauthorized401, serverError500 }

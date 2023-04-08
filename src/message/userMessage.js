@@ -29,5 +29,8 @@ const VERIFICATION_EMAIL_SENT = {
     heading: "Confirmation email",
     description: "Please check your email to confirm and login into your account."
 }
+const AUTHORIZED = "Authorized user"
+const UNAUTHORIZED = "Unauthorized user"
+const TOKEN_REQUIRED = "A token is required for authentication"
 
-module.exports = { EMAIL_TAKEN, SIGNUP, LOGIN, INVALID_EMAIL_FORMAT, INVALID_CREDENTIALS, EMAIL_NOT_FOUND }
+module.exports = { EMAIL_TAKEN, SIGNUP, LOGIN, INVALID_EMAIL_FORMAT, INVALID_CREDENTIALS, EMAIL_NOT_FOUND, AUTHORIZED, UNAUTHORIZED, TOKEN_REQUIRED }

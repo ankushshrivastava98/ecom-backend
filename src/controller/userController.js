@@ -1,13 +1,13 @@
 const userModel = require("../models/User");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { badRequest400, serverError500, created201, success200 } = require("../helpers/requestBuilder");
+const { badRequest400, serverError500, created201, success200, unauthorized401 } = require("../helpers/requestBuilder");
 const validator = require('validator');
-const { EMAIL_TAKEN, SIGNUP, LOGIN, INVALID_EMAIL_FORMAT, INVALID_CREDENTIALS, EMAIL_NOT_FOUND } = require("../message/userMessage");
+const { EMAIL_TAKEN, SIGNUP, LOGIN, INVALID_EMAIL_FORMAT, INVALID_CREDENTIALS, EMAIL_NOT_FOUND, UNAUTHORIZED, TOKEN_REQUIRED, AUTHORIZED } = require("../message/userMessage");
 const { UNKNOWN_ERROR } = require("../message/common");
 
 const SECRET_KEY = 'ha34523jiosf123dhfj';
-const TOKEN_EXPIRE_TIME = "300s";
+const TOKEN_EXPIRE_TIME = "30s";
 const HASH_SALT = 7;
 
 const signup = async (req, res) => {
@@ -41,7 +41,7 @@ const signup = async (req, res) => {
 
   } catch (error) {
     console.log(error)
-    serverError500(req)
+    serverError500(res)
   }
 }
 
@@ -53,7 +53,9 @@ const signin = async (req, res) => {
       if (existingUser) {
         const passwordMatched = await bcrypt.compare(password, existingUser.password);
         if (passwordMatched) {
-          const token = jwt.sign({ email: existingUser.email, id: existingUser.id }, SECRET_KEY);
+          const token = jwt.sign({ email: existingUser.email, id: existingUser.id }, SECRET_KEY, {
+            expiresIn: TOKEN_EXPIRE_TIME
+          });
           success200(res, LOGIN, { data: token })
         } else {
           badRequest400(res, INVALID_CREDENTIALS)
@@ -66,8 +68,25 @@ const signin = async (req, res) => {
     }
   } catch (error) {
     console.log(error)
-    serverError500(req)
+    serverError500(res)
   }
 }
 
-module.exports = { signup, signin }
+const authenticate = (req, res) => {
+  try {
+    let token = req.headers.authorization;
+    if (token) {
+      token = token.split(" ")[1];
+      const check = jwt.verify(token, SECRET_KEY);
+      check && success200(res, AUTHORIZED)
+    } else {
+      unauthorized401(res, TOKEN_REQUIRED)
+    }
+  } catch (error) {
+    console.log(error)
+    unauthorized401(res, UNAUTHORIZED)
+    // serverError500(res)
+  }
+};
+
+module.exports = { signup, signin, authenticate }
