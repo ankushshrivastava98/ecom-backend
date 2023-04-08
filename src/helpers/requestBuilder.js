@@ -1,3 +1,5 @@
+const { SERVER_ERROR } = require("../message/common");
+
 function success200(res, message, data) {
     res.status(200).json({ message, data });
 }
@@ -13,9 +15,8 @@ function badRequest400(res, message) {
 }
 
 function serverError500(res) {
-    const errorMessage = "SERVER ERROR";
     res.status(500).json({
-        message: errorMessage
+        message: SERVER_ERROR
     })
 }
 
