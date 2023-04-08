@@ -25,5 +25,9 @@ const EMAIL_NOT_FOUND = {
     heading: "User not found",
     description: "Please check your email address!"
 }
+const VERIFICATION_EMAIL_SENT = {
+    heading: "Confirmation email",
+    description: "Please check your email to confirm and login into your account."
+}
 
 module.exports = { EMAIL_TAKEN, SIGNUP, LOGIN, INVALID_EMAIL_FORMAT, INVALID_CREDENTIALS, EMAIL_NOT_FOUND }
