@@ -1,7 +1,7 @@
 const { SERVER_ERROR } = require("../message/common");
 
 function success200(res, message, data) {
-    res.status(200).json({ message, data });
+    res.status(200).json({ message, ...data });
 }
 
 function created201(res, message, data) {

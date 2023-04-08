@@ -29,7 +29,7 @@ const signup = async (req, res) => {
           const token = jwt.sign({ email: newUser.email, id: newUser.id }, SECRET_KEY, {
             expiresIn: TOKEN_EXPIRE_TIME
           });
-          created201(res, SIGNUP, { token })
+          created201(res, SIGNUP, { data: token })
         }
         else {
           badRequest400(res, UNKNOWN_ERROR);
@@ -54,7 +54,7 @@ const signin = async (req, res) => {
         const passwordMatched = await bcrypt.compare(password, existingUser.password);
         if (passwordMatched) {
           const token = jwt.sign({ email: existingUser.email, id: existingUser.id }, SECRET_KEY);
-          success200(res, LOGIN, { token })
+          success200(res, LOGIN, { data: token })
         } else {
           badRequest400(res, INVALID_CREDENTIALS)
         }
