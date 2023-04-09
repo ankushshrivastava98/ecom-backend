@@ -97,7 +97,7 @@ const userInformation = async (req, res) => {
     if (userData) {
       delete userData.id
       delete userData.timeStamp
-      success200(res, AUTHORIZED, { data: userData })
+      success200(res, 'User information', { data: userData })
     }
   } catch (error) {
     console.log(error)
@@ -105,4 +105,26 @@ const userInformation = async (req, res) => {
   }
 };
 
-module.exports = { signup, signin, authenticate, userInformation }
+const updateUserInformation = async (req, res) => {
+  try {
+    const userId = req.userId;
+    const oldUserData = await userModel.findById(userId);
+    const updatedUserData = {
+      ...oldUserData,
+      inofrmation: {
+         ...req.body.inofrmation
+
+      }
+    }
+    const userData = await userModel.findByIdAndUpdate(userId, updatedUserData, {new : true});
+    if (userData) {
+      success200(res, 'User Information updated successfully', { data: userData })
+    } else {
+      badRequest400(res, 'Unable to update user Information')
+    }
+  } catch (error) {
+    console.log(error)
+    serverError500(res)
+  }
+};
+module.exports = { signup, signin, authenticate, userInformation, updateUserInformation }

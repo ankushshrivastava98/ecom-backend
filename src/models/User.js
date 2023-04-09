@@ -32,7 +32,7 @@ const UserSchema = new mongose.Schema({
                 type: String,
                 required: true
             },
-            altPhone: {
+            altphone: {
                 type: String,
                 required: true
             },
