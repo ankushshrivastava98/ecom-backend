@@ -9,7 +9,7 @@ router.post("/signin", signin)
 // USER
 router.post("/signup", signup)
 
-router.post("/authenticate", authenticate)
+router.get("/authenticate", authenticate)
 
 
 router.get("/user", auth, userInformation)

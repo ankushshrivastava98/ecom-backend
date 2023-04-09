@@ -29,7 +29,7 @@ const signup = async (req, res) => {
           const token = jwt.sign({ email: newUser.email, id: newUser.id }, SECRET_KEY, {
             expiresIn: TOKEN_EXPIRE_TIME
           });
-          created201(res, SIGNUP, { data: token })
+          created201(res, SIGNUP, { data: { token } })
         }
         else {
           badRequest400(res, UNKNOWN_ERROR);
@@ -56,7 +56,7 @@ const signin = async (req, res) => {
           const token = jwt.sign({ email: existingUser.email, id: existingUser.id }, SECRET_KEY, {
             expiresIn: TOKEN_EXPIRE_TIME
           });
-          success200(res, LOGIN, { data: token })
+          success200(res, LOGIN, { data: { token } })
         } else {
           badRequest400(res, INVALID_CREDENTIALS)
         }
@@ -94,10 +94,10 @@ const userInformation = async (req, res) => {
     const requiredFields = "username email information"
     const userId = req.userId;
     const userData = (await userModel.findById(userId).select(requiredFields)).toJSON();
-    if(userData){
+    if (userData) {
       delete userData.id
       delete userData.timeStamp
-      success200(res, AUTHORIZED, {data: userData})
+      success200(res, AUTHORIZED, { data: userData })
     }
   } catch (error) {
     console.log(error)
