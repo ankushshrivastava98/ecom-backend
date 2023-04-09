@@ -7,7 +7,7 @@ const { EMAIL_TAKEN, SIGNUP, LOGIN, INVALID_EMAIL_FORMAT, INVALID_CREDENTIALS, E
 const { UNKNOWN_ERROR } = require("../message/common");
 
 const SECRET_KEY = 'ha34523jiosf123dhfj';
-const TOKEN_EXPIRE_TIME = "30s";
+const TOKEN_EXPIRE_TIME = "3000s";
 const HASH_SALT = 7;
 
 const signup = async (req, res) => {
@@ -89,4 +89,20 @@ const authenticate = (req, res) => {
   }
 };
 
-module.exports = { signup, signin, authenticate }
+const userInformation = async (req, res) => {
+  try {
+    const requiredFields = "username email information"
+    const userId = req.userId;
+    const userData = (await userModel.findById(userId).select(requiredFields)).toJSON();
+    if(userData){
+      delete userData.id
+      delete userData.timeStamp
+      success200(res, AUTHORIZED, {data: userData})
+    }
+  } catch (error) {
+    console.log(error)
+    serverError500(res)
+  }
+};
+
+module.exports = { signup, signin, authenticate, userInformation }
