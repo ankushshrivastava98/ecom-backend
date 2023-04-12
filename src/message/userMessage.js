@@ -29,8 +29,13 @@ const VERIFICATION_EMAIL_SENT = {
     heading: "Confirmation email",
     description: "Please check your email to confirm and login into your account."
 }
+
+const INFORMATION_LIMIT = {
+    heading: "Sorry",
+    description: "Can not add new delivery information, Please delete one existing to add new"
+}
 const AUTHORIZED = "Authorized user"
 const UNAUTHORIZED = "Unauthorized user"
 const TOKEN_REQUIRED = "A token is required for authentication"
 
-module.exports = { EMAIL_TAKEN, SIGNUP, LOGIN, INVALID_EMAIL_FORMAT, INVALID_CREDENTIALS, EMAIL_NOT_FOUND, AUTHORIZED, UNAUTHORIZED, TOKEN_REQUIRED }
+module.exports = { EMAIL_TAKEN, SIGNUP, LOGIN, INVALID_EMAIL_FORMAT, INVALID_CREDENTIALS, EMAIL_NOT_FOUND, AUTHORIZED, UNAUTHORIZED, TOKEN_REQUIRED, INFORMATION_LIMIT }

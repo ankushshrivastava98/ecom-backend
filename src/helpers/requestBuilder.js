@@ -18,9 +18,9 @@ function unauthorized401(res, message) {
         message,
     })
 }
-function serverError500(res) {
+function serverError500(res, customMessage) {
     res.status(500).json({
-        message: SERVER_ERROR
+        message: customMessage || SERVER_ERROR
     })
 }
 

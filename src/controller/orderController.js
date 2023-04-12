@@ -5,16 +5,16 @@ const orderModel = require('./../models/Order');
 
 const addNewOrder = async (req, res) => {
     try {
-        const { slug, size, color, quantity } = req.body;
+        const { slug, size, color, quantity, information } = req.body;
         const userId = req.userId;
         const orderedProduct = await productModel.findOne({ slug })
         let updatedProductData = getUpdatedProductDataIfInStock(orderedProduct, { size, color, quantity })
         
         if (updatedProductData) {
-            const data = new orderModel({ slug, size, color, quantity, userId });
+            const data = new orderModel({ slug, size, color, quantity, userId, information });
             const result = data && await data.save();
-            if (result) {
-                await productModel.findOneAndUpdate({ slug }, updatedProductData, { new: true });
+            const updateProductStock = result && await productModel.findOneAndUpdate({ slug }, updatedProductData, { new: true });
+            if (result && updateProductStock) {
                 success200(res, "Order placed successfully", { data: result });
             } else {
                 badRequest400(res, 'Unable to place order, please try again.');

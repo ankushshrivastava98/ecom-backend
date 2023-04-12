@@ -1,14 +1,15 @@
-const userModel = require("../models/User");
+const userModel = require("../models/User/User");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { badRequest400, serverError500, created201, success200, unauthorized401 } = require("../helpers/requestBuilder");
 const validator = require('validator');
-const { EMAIL_TAKEN, SIGNUP, LOGIN, INVALID_EMAIL_FORMAT, INVALID_CREDENTIALS, EMAIL_NOT_FOUND, UNAUTHORIZED, TOKEN_REQUIRED, AUTHORIZED } = require("../message/userMessage");
+const { EMAIL_TAKEN, SIGNUP, LOGIN, INVALID_EMAIL_FORMAT, INVALID_CREDENTIALS, EMAIL_NOT_FOUND, UNAUTHORIZED, TOKEN_REQUIRED, AUTHORIZED, INFORMATION_LIMIT } = require("../message/userMessage");
 const { UNKNOWN_ERROR } = require("../message/common");
 
 const SECRET_KEY = 'ha34523jiosf123dhfj';
 const TOKEN_EXPIRE_TIME = "3000s";
 const HASH_SALT = 7;
+const INFORMATION_MAX_LIMIT = 3;
 
 const signup = async (req, res) => {
   const { username, email, password } = req.body;
@@ -110,17 +111,20 @@ const updateUserInformation = async (req, res) => {
     const userId = req.userId;
     const oldUserData = await userModel.findById(userId);
     const updatedUserData = {
-      ...oldUserData,
-      inofrmation: {
-         ...req.body.inofrmation
-
-      }
+      ...oldUserData.toJSON(),
+      information: req.body.information
     }
-    const userData = await userModel.findByIdAndUpdate(userId, updatedUserData, {new : true});
-    if (userData) {
-      success200(res, 'User Information updated successfully', { data: userData })
-    } else {
-      badRequest400(res, 'Unable to update user Information')
+    if (updatedUserData.information.length > INFORMATION_MAX_LIMIT){
+      badRequest400(res, INFORMATION_LIMIT)
+    }
+    else {
+      const userData = await userModel.findByIdAndUpdate(userId, updatedUserData, { new: true });
+      console.log(updatedUserData, userId)
+      if (userData) {
+        success200(res, 'User Information updated successfully', { data: userData })
+      } else {
+        badRequest400(res, 'Unable to update user Information')
+      }
     }
   } catch (error) {
     console.log(error)

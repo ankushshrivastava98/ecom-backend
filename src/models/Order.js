@@ -1,24 +1,39 @@
 const mongose = require("mongoose");
+const { contactSchema, locationSchema } = require("./User/informationSchema");
+const { Schema } = require("mongoose");
 const OrderSchema = new mongose.Schema({
-    userId:{
+    userId: {
         type: String,
-        required:true,
+        required: true,
     },
-    slug:{
+    slug: {
         type: String,
-        required:true,
+        required: true,
     },
-    size:{
+    size: {
         type: String,
-        required:true,
+        required: true,
     },
-    color:{
+    color: {
         type: String,
-        required:true,
+        required: true,
     },
-    quantity:{
-        type: String,
-        required:true,
+    quantity: {
+        type: Schema.Types.Number,
+        minimum: 1,
+        required: true,
+        validate: {
+            validator: Number.isInteger,
+            message: '{VALUE} is not an integer value'
+        }
+    },
+    information: {
+        contact: {
+            type: contactSchema,
+        },
+        location: {
+            type: locationSchema,
+        }
     }
 })
 
