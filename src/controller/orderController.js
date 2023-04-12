@@ -9,18 +9,19 @@ const addNewOrder = async (req, res) => {
         const userId = req.userId;
         const orderedProduct = await productModel.findOne({ slug })
         let updatedProductData = getUpdatedProductDataIfInStock(orderedProduct, { size, color, quantity })
-        
+
         if (updatedProductData) {
             const data = new orderModel({ slug, size, color, quantity, userId, information });
             const result = data && await data.save();
-            const updateProductStock = result && await productModel.findOneAndUpdate({ slug }, updatedProductData, { new: true });
+            const updateStock = await productModel.findOneAndUpdate({ slug }, updatedProductData, { new: true });
+            const updateProductStock = result && updateStock
             if (result && updateProductStock) {
                 success200(res, "Order placed successfully", { data: result });
             } else {
                 badRequest400(res, 'Unable to place order, please try again.');
             }
         } else {
-            badRequest400(res, 'Product not available or Out of Stock');
+            badRequest400(res, 'Something Went wrong, please try again');
         }
 
     } catch (e) {

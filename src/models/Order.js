@@ -28,12 +28,8 @@ const OrderSchema = new mongose.Schema({
         }
     },
     information: {
-        contact: {
-            type: contactSchema,
-        },
-        location: {
-            type: locationSchema,
-        }
+        contact: contactSchema,
+        location: locationSchema,
     }
 })
 

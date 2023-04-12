@@ -114,14 +114,15 @@ const updateUserInformation = async (req, res) => {
       ...oldUserData.toJSON(),
       information: req.body.information
     }
-    if (updatedUserData.information.length > INFORMATION_MAX_LIMIT){
+    if (updatedUserData.information.length > INFORMATION_MAX_LIMIT) {
       badRequest400(res, INFORMATION_LIMIT)
     }
     else {
       const userData = await userModel.findByIdAndUpdate(userId, updatedUserData, { new: true });
       console.log(updatedUserData, userId)
       if (userData) {
-        success200(res, 'User Information updated successfully', { data: userData })
+        const information = userData.information;
+        success200(res, 'User Information updated successfully', { data: { information } })
       } else {
         badRequest400(res, 'Unable to update user Information')
       }
